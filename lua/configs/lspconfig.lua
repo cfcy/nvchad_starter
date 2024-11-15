@@ -1,19 +1,34 @@
--- load defaults i.e lua_lsp
-require("nvchad.configs.lspconfig").defaults()
-
+local nvlsp = require "nvchad.configs.lspconfig"
 local lspconfig = require "lspconfig"
 
--- EXAMPLE
-local servers = { "html", "cssls" }
-local nvlsp = require "nvchad.configs.lspconfig"
+nvlsp.defaults()
 
--- lsps with default config
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = nvlsp.capabilities,
-  }
+local servers = {
+    clangd = {
+        cmd = {
+            "clangd",
+            "--compile-commands-dir=./",
+            "--background-index",
+            "--suggest-missing-includes"
+        },
+        root_dir = lspconfig.util.root_pattern("compile_commands.json", "build", ".cproject", ".project") or
+                   lspconfig.util.find_git_root() or
+                   lspconfig.util.find_node_modules_root() or
+                   lspconfig.util.find_package_json_root(),
+    },
+
+    pyright = {},
+    awk_ls = {},
+    bashls = {},
+    lua_ls = {},
+}
+
+for name, opts in pairs(servers) do
+    opts.on_init = nvlsp.on_init
+    opts.on_attach = nvlsp.on_attach
+    opts.capabilities = nvlsp.capabilities
+
+    lspconfig[name].setup(opts)
 end
 
 -- configuring single server, example: typescript
@@ -22,3 +37,4 @@ end
 --   on_init = nvlsp.on_init,
 --   capabilities = nvlsp.capabilities,
 -- }
+

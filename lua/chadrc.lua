@@ -17,7 +17,7 @@ M.base46 = {
         Type = { fg = "green", },
         StorageClass = { fg = "cyan", },
         Label = { fg = "red", },
-        ["@comment"] = { italic = true },
+        ["@comment"] = { italic = false },
         ["@punctuation.bracket"] = { fg = "pink", },
         ["@punctuation.delimiter"] = { fg = "#93a1a1", },
         ["@keyword"] = { fg = "cyan", },
